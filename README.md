@@ -1,3 +1,3 @@
 # PollApp
-Polling App where users can create polls and share 
+Create polls instantly and share them on social media, and view real-time data reports
 
