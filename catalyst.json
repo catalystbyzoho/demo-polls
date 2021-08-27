@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "targets": [
+      "poll_service",
+      "data_populate"
+    ],
+    "ignore": [],
+    "source": "functions"
+  },
+  "client": {
+    "source": "client"
+  }
+}
