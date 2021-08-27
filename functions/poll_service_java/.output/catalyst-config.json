@@ -1,0 +1,10 @@
+{
+	"deployment": {
+		"name": "poll_service_java",
+		"stack": "java8",
+		"type": "advancedio"
+	},
+	"execution": {
+		"main": "Service"
+	}
+}

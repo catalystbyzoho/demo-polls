@@ -1,0 +1,255 @@
+/* Input elements */
+
+/*
+button:focus{
+	outline: 1px solid -webkit-focus-ring-color;
+}
+*/
+
+.pollapp-button {
+  font-size: 16px;
+  padding: 8px 25px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.button-primary {
+  background-color: #6267f5;
+  color: #fff;
+}
+
+.button-secondary {
+  background-color: #f8f8f8;
+  color: #838383;
+}
+.button-secondary:hover {
+  color: #838383;
+}
+
+.button-primary-hollow {
+  background-color: #ffffff;
+  color: #6267f5;
+  border-color: #6267f5;
+}
+.button-primary-hollow:hover {
+  color: #6267f5;
+}
+
+.button-primary-hollow:focus {
+  background-color: #ffffff;
+  color: #6267f5;
+  border: 1px solid #6267f5;
+}
+
+.button-primary-white {
+  background-color: #fff;
+  color: #6267f5;
+}
+
+.button-primary-white:hover {
+  color: #6267f5;
+}
+
+.button-danger {
+  background-color: #fff7f7;
+  color: #ed4141;
+}
+
+a.button-primary:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+/*Toggle Switch*/
+
+.toggle-checkbox {
+  position: absolute;
+  z-index: -5;
+  opacity: 0;
+}
+
+.toggle-checkbox + span {
+  width: 22px;
+  height: 14px;
+  border-radius: 30px;
+  border: 2px solid #a7a7a7;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  transition: border-color 200ms ease-in, background-color 200ms ease-in;
+}
+
+.toggle-checkbox:focus-visible + span {
+  outline: 1px solid -webkit-focus-ring-color;
+}
+
+.toggle-checkbox + span::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #a7a7a7;
+  border-radius: 50%;
+  left: 2px;
+  top: 1px;
+  transition: transform 200ms ease-in, background-color 200ms ease-in;
+}
+
+.toggle-checkbox:checked + span {
+  border-color: #6267f5;
+  background-color: #6267f5;
+}
+
+.toggle-checkbox:checked + span::before {
+  background-color: #fff;
+  transform: translateX(7px);
+}
+
+.toggle-checkbox-text {
+  color: #5a5a5a;
+  vertical-align: middle;
+  font-size: 14px;
+  margin-left: 10px;
+  transition: color 200ms ease-in;
+}
+.toggle-checkbox:checked ~ .toggle-checkbox-text {
+  color: #6267f5;
+}
+
+/*Input group*/
+
+.input-group {
+  display: block;
+}
+
+.input-group h6 {
+  color: #818181;
+  font-size: 16px;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  border: 1px solid #e2e2e2;
+  border-radius: 2px;
+  color: #000000;
+  font-size: 16px;
+  padding: 15px;
+  background-color: #fff;
+}
+
+.input-group input::placeholder {
+  color: #b1b1b1;
+}
+
+.add-image {
+  font-size: 14px;
+  color: #6267f5;
+  cursor: pointer;
+}
+
+.add-image input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+}
+
+.remove-image {
+  font-size: 14px;
+  color: #f56262;
+  cursor: pointer;
+}
+
+.poll-answer-wrap {
+  margin-bottom: 30px;
+  position: relative;
+  cursor: pointer;
+  display: block;
+}
+
+.poll-answer-wrap input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+}
+
+.poll-answer-wrap input + span {
+  width: 20px;
+  height: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #e2e3fa;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 200ms ease-in;
+}
+
+.poll-answer-wrap input + span::before {
+  content: "\2713";
+  display: block;
+  text-align: center;
+  opacity: 0;
+  color: #fff;
+  transition: opacity 200ms ease-in;
+}
+
+.poll-answer-wrap input:checked + span {
+  border-color: #6267f5;
+  background-color: #6267f5;
+}
+
+.poll-answer-wrap input:checked + span::before {
+  opacity: 1;
+}
+
+.poll-answer-wrap input:checked ~ div .poll-answer {
+  font-weight: 600;
+}
+
+.poll-answer {
+  display: block;
+  color: #242424;
+  font-size: 20px;
+  transition: font-weight 200ms ease-in;
+}
+
+.poll-answer-image-holder {
+  margin-top: 10px;
+  height: 150px;
+  overflow: hidden;
+}
+.poll-answer-image-holder > img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+/*Share links*/
+
+.share-link {
+  font-size: 14px;
+}
+
+.share-link:hover {
+  text-decoration: none;
+}
+
+a.share-twitter {
+  color: #35cbff;
+}
+
+a.share-facebook {
+  color: #1375c9;
+}

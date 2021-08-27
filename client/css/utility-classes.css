@@ -1,0 +1,67 @@
+/*Typography*/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  margin: 0;
+}
+
+/*Spacing*/
+.m0 {
+  margin: 0;
+}
+
+.mT10 {
+  margin-top: 10px;
+}
+.mT20 {
+  margin-top: 20px;
+}
+.mT25 {
+  margin-top: 25px;
+}
+.mT30 {
+  margin-top: 30px;
+}
+.mT40 {
+  margin-top: 40px;
+}
+.mT50 {
+  margin-top: 30px;
+}
+
+.mB10 {
+  margin-bottom: 10px;
+}
+.mB15 {
+  margin-bottom: 15px;
+}
+.mB20 {
+  margin-bottom: 20px;
+}
+.mB25 {
+  margin-bottom: 25px;
+}
+.mB30 {
+  margin-bottom: 30px;
+}
+
+.mR30 {
+  margin-right: 30px;
+}
+
+.mL30 {
+  margin-left: 30px;
+}
+
+.maxW625 {
+  max-width: 625px;
+}
+
+/*Interaction*/
+.cP {
+  cursor: pointer;
+}

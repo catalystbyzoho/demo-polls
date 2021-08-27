@@ -1,0 +1,667 @@
+{
+  "name": "project-template",
+  "version": "1.0.0",
+  "parameters": {},
+  "components": {
+    "Circuits": [],
+    "Functions": [
+      {
+        "type": "function",
+        "name": "poll_service",
+        "properties": {
+          "stack": "node10",
+          "code": {
+            "path": "Functions/poll_service.zip"
+          },
+          "type": "applogic",
+          "name": "poll_service"
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "function",
+        "name": "poll_service_java",
+        "properties": {
+          "stack": "java8",
+          "code": {
+            "path": "Functions/poll_service_java.zip"
+          },
+          "type": "applogic",
+          "name": "poll_service_java"
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "function",
+        "name": "data_populate",
+        "properties": {
+          "stack": "node10",
+          "code": {
+            "path": "Functions/data_populate.zip"
+          },
+          "type": "basicio",
+          "name": "data_populate"
+        },
+        "dependsOn": []
+      }
+    ],
+    "Add-onServices": [],
+    "WebClient": [
+      {
+        "type": "client",
+        "name": "PollApp",
+        "properties": {
+          "app_name": "PollApp",
+          "code": {
+            "path": "WebClient/PollApp.zip"
+          }
+        },
+        "dependsOn": []
+      }
+    ],
+    "Cron": [],
+    "Filestore": [
+      {
+        "type": "folder",
+        "name": "Images",
+        "properties": {
+          "folder_name": "Images"
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "folderPermission",
+        "name": "Images-App Administrator",
+        "properties": {
+          "role_name": "App Administrator",
+          "folder_name": "Images",
+          "type": "App Administrator",
+          "folder_permissions": [
+            "DOWNLOAD",
+            "UPLOAD",
+            "DELETE"
+          ]
+        },
+        "dependsOn": [
+          "Filestore.folder.Images"
+        ]
+      },
+      {
+        "type": "folderPermission",
+        "name": "Images-App User",
+        "properties": {
+          "role_name": "App User",
+          "folder_name": "Images",
+          "type": "App User",
+          "folder_permissions": [
+            "DOWNLOAD"
+          ]
+        },
+        "dependsOn": [
+          "Filestore.folder.Images"
+        ]
+      }
+    ],
+    "Mail": [],
+    "Zia": [],
+    "Datastore": [
+      {
+        "type": "table",
+        "name": "PollOptions",
+        "properties": {
+          "table_name": "PollOptions"
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "column",
+        "name": "PollOptions-poll_id",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "poll_id",
+          "is_unique": false,
+          "is_mandatory": false,
+          "table_id": "PollOptions",
+          "parent_table": "Polls",
+          "table_name": "PollOptions",
+          "constraint_type": "ON-DELETE-CASCADE",
+          "data_type": "foreign key",
+          "parent_column": "ROWID",
+          "search_index_enabled": false,
+          "max_length": 50
+        },
+        "dependsOn": [
+          "Datastore.table.Polls",
+          "Datastore.table.PollOptions",
+          "Datastore.column.ROWID"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "PollOptions-content",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "content",
+          "data_type": "varchar",
+          "is_unique": false,
+          "is_mandatory": false,
+          "search_index_enabled": false,
+          "table_id": "PollOptions",
+          "table_name": "PollOptions",
+          "max_length": 255
+        },
+        "dependsOn": [
+          "Datastore.table.PollOptions"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "PollOptions-votes",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "votes",
+          "data_type": "int",
+          "is_unique": false,
+          "is_mandatory": false,
+          "default_value": "0",
+          "search_index_enabled": false,
+          "table_id": "PollOptions",
+          "table_name": "PollOptions",
+          "max_length": 10
+        },
+        "dependsOn": [
+          "Datastore.table.PollOptions"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "PollOptions-file_id",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "file_id",
+          "data_type": "varchar",
+          "is_unique": false,
+          "is_mandatory": false,
+          "search_index_enabled": false,
+          "table_id": "PollOptions",
+          "table_name": "PollOptions",
+          "max_length": 255
+        },
+        "dependsOn": [
+          "Datastore.table.PollOptions"
+        ]
+      },
+      {
+        "type": "tableScope",
+        "name": "PollOptions-App Administrator",
+        "properties": {
+          "role_name": "App Administrator",
+          "table_scope": "GLOBAL",
+          "type": "App Administrator",
+          "table_name": "PollOptions"
+        },
+        "dependsOn": [
+          "Datastore.table.PollOptions"
+        ]
+      },
+      {
+        "type": "tableScope",
+        "name": "PollOptions-App User",
+        "properties": {
+          "role_name": "App User",
+          "table_scope": "GLOBAL",
+          "type": "App User",
+          "table_name": "PollOptions"
+        },
+        "dependsOn": [
+          "Datastore.table.PollOptions"
+        ]
+      },
+      {
+        "type": "tablePermission",
+        "name": "PollOptions-App Administrator",
+        "properties": {
+          "role_name": "App Administrator",
+          "type": "App Administrator",
+          "table_permissions": [
+            "SELECT",
+            "UPDATE",
+            "INSERT",
+            "DELETE"
+          ],
+          "table_name": "PollOptions"
+        },
+        "dependsOn": [
+          "Datastore.table.PollOptions"
+        ]
+      },
+      {
+        "type": "tablePermission",
+        "name": "PollOptions-App User",
+        "properties": {
+          "role_name": "App User",
+          "type": "App User",
+          "table_permissions": [
+            "SELECT"
+          ],
+          "table_name": "PollOptions"
+        },
+        "dependsOn": [
+          "Datastore.table.PollOptions"
+        ]
+      },
+      {
+        "type": "table",
+        "name": "Polls",
+        "properties": {
+          "table_name": "Polls"
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "column",
+        "name": "Polls-content",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "content",
+          "data_type": "varchar",
+          "is_unique": false,
+          "is_mandatory": false,
+          "search_index_enabled": false,
+          "table_id": "Polls",
+          "table_name": "Polls",
+          "max_length": 255
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "Polls-duration",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "duration",
+          "data_type": "datetime",
+          "is_unique": false,
+          "is_mandatory": false,
+          "search_index_enabled": false,
+          "table_id": "Polls",
+          "table_name": "Polls",
+          "max_length": 50
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "Polls-category",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "category",
+          "data_type": "varchar",
+          "is_unique": false,
+          "is_mandatory": false,
+          "search_index_enabled": false,
+          "table_id": "Polls",
+          "table_name": "Polls",
+          "max_length": 255
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "Polls-file_id",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "file_id",
+          "data_type": "varchar",
+          "is_unique": false,
+          "is_mandatory": false,
+          "search_index_enabled": false,
+          "table_id": "Polls",
+          "table_name": "Polls",
+          "max_length": 255
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "Polls-votes",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "votes",
+          "data_type": "int",
+          "is_unique": false,
+          "is_mandatory": false,
+          "default_value": "0",
+          "search_index_enabled": false,
+          "table_id": "Polls",
+          "table_name": "Polls",
+          "max_length": 10
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "Polls-created_by",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "created_by",
+          "data_type": "varchar",
+          "is_unique": false,
+          "is_mandatory": false,
+          "search_index_enabled": false,
+          "table_id": "Polls",
+          "table_name": "Polls",
+          "max_length": 255
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "tableScope",
+        "name": "Polls-App Administrator",
+        "properties": {
+          "role_name": "App Administrator",
+          "table_scope": "GLOBAL",
+          "type": "App Administrator",
+          "table_name": "Polls"
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "tableScope",
+        "name": "Polls-App User",
+        "properties": {
+          "role_name": "App User",
+          "table_scope": "GLOBAL",
+          "type": "App User",
+          "table_name": "Polls"
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "tablePermission",
+        "name": "Polls-App Administrator",
+        "properties": {
+          "role_name": "App Administrator",
+          "type": "App Administrator",
+          "table_permissions": [
+            "SELECT",
+            "UPDATE",
+            "INSERT",
+            "DELETE"
+          ],
+          "table_name": "Polls"
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "tablePermission",
+        "name": "Polls-App User",
+        "properties": {
+          "role_name": "App User",
+          "type": "App User",
+          "table_permissions": [
+            "SELECT"
+          ],
+          "table_name": "Polls"
+        },
+        "dependsOn": [
+          "Datastore.table.Polls"
+        ]
+      },
+      {
+        "type": "table",
+        "name": "User_Polls",
+        "properties": {
+          "table_name": "User_Polls"
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "column",
+        "name": "User_Polls-poll_id",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "poll_id",
+          "is_unique": false,
+          "is_mandatory": false,
+          "table_id": "User_Polls",
+          "parent_table": "Polls",
+          "table_name": "User_Polls",
+          "constraint_type": "ON-DELETE-CASCADE",
+          "data_type": "foreign key",
+          "parent_column": "ROWID",
+          "search_index_enabled": false,
+          "max_length": 50
+        },
+        "dependsOn": [
+          "Datastore.table.Polls",
+          "Datastore.column.ROWID",
+          "Datastore.table.User_Polls"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "User_Polls-poll_option_id",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "poll_option_id",
+          "is_unique": false,
+          "is_mandatory": false,
+          "table_id": "User_Polls",
+          "parent_table": "PollOptions",
+          "table_name": "User_Polls",
+          "constraint_type": "ON-DELETE-CASCADE",
+          "data_type": "foreign key",
+          "parent_column": "ROWID",
+          "search_index_enabled": false,
+          "max_length": 50
+        },
+        "dependsOn": [
+          "Datastore.table.PollOptions",
+          "Datastore.column.ROWID",
+          "Datastore.table.User_Polls"
+        ]
+      },
+      {
+        "type": "column",
+        "name": "User_Polls-voted_time",
+        "properties": {
+          "decimal_digits": 2,
+          "column_name": "voted_time",
+          "data_type": "datetime",
+          "is_unique": false,
+          "is_mandatory": false,
+          "search_index_enabled": false,
+          "table_id": "User_Polls",
+          "table_name": "User_Polls",
+          "max_length": 50
+        },
+        "dependsOn": [
+          "Datastore.table.User_Polls"
+        ]
+      },
+      {
+        "type": "tableScope",
+        "name": "User_Polls-App Administrator",
+        "properties": {
+          "role_name": "App Administrator",
+          "table_scope": "GLOBAL",
+          "type": "App Administrator",
+          "table_name": "User_Polls"
+        },
+        "dependsOn": [
+          "Datastore.table.User_Polls"
+        ]
+      },
+      {
+        "type": "tableScope",
+        "name": "User_Polls-App User",
+        "properties": {
+          "role_name": "App User",
+          "table_scope": "GLOBAL",
+          "type": "App User",
+          "table_name": "User_Polls"
+        },
+        "dependsOn": [
+          "Datastore.table.User_Polls"
+        ]
+      },
+      {
+        "type": "tablePermission",
+        "name": "User_Polls-App Administrator",
+        "properties": {
+          "role_name": "App Administrator",
+          "type": "App Administrator",
+          "table_permissions": [
+            "SELECT",
+            "UPDATE",
+            "INSERT",
+            "DELETE"
+          ],
+          "table_name": "User_Polls"
+        },
+        "dependsOn": [
+          "Datastore.table.User_Polls"
+        ]
+      },
+      {
+        "type": "tablePermission",
+        "name": "User_Polls-App User",
+        "properties": {
+          "role_name": "App User",
+          "type": "App User",
+          "table_permissions": [
+            "SELECT"
+          ],
+          "table_name": "User_Polls"
+        },
+        "dependsOn": [
+          "Datastore.table.User_Polls"
+        ]
+      }
+    ],
+    "Authentication": [
+      {
+        "type": "emailTemplates",
+        "name": "2",
+        "properties": {
+          "subject": "Password Reset for %APP_NAME%",
+          "template_type": 2,
+          "message": "<p>Hello,</p>\n<p>Follow this link to reset your %APP_NAME% password for your %EMAIL% account.</p>\n<p><a href='%LINK%'>%LINK%</a></p>\n<p>If you didn’t ask to reset your password, you can ignore this email.</p>\n<p>Thanks,</p>\n<p>Your %APP_NAME% team</p>"
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "emailTemplates",
+        "name": "1",
+        "properties": {
+          "subject": "Welcome to %APP_NAME%",
+          "template_type": 1,
+          "message": "</p>Hello ,</p>\n<p>Follow this link to join in %APP_NAME% .</p>\n<p><a href='%LINK%'>%LINK%</a></p>\n<p>If you didn’t ask to join the application, you can ignore this email.</p>\n<p>Thanks,</p>\n<p>Your %APP_NAME% team</p>"
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "roles",
+        "name": "App Administrator",
+        "properties": {
+          "role_name": "App Administrator",
+          "description": "Admin Role for the application",
+          "type": "App Administrator",
+          "is_default": true
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "roles",
+        "name": "App User",
+        "properties": {
+          "role_name": "App User",
+          "description": "User Role for the application",
+          "type": "App User",
+          "is_default": false
+        },
+        "dependsOn": [
+          "Authentication.roles.App Administrator"
+        ]
+      }
+    ],
+    "SecurityRules": [
+      {
+        "type": "rules",
+        "name": "security-rules",
+        "properties": {
+          "functions": {
+            "data_populate": {
+              "methods": [
+                "GET",
+                "POST",
+                "DELETE",
+                "PUT",
+                "PATCH"
+              ],
+              "http-trigger": true,
+              "authentication": "optional"
+            }
+          },
+          "advancedio": {
+            "poll_service": [
+              {
+                ".*": {
+                  "methods": [
+                    "GET",
+                    "POST",
+                    "DELETE",
+                    "PUT",
+                    "PATCH"
+                  ],
+                  "authentication": "optional"
+                }
+              }
+            ]
+          }
+        },
+        "dependsOn": []
+      }
+    ],
+    "EventListeners": [
+      {
+        "type": "listeners",
+        "name": "Default",
+        "properties": {
+          "name": "Default",
+          "description": "Associates events in Catalyst components, such as a Data Store insertion or a File Store upload, with target event functions"
+        },
+        "dependsOn": []
+      }
+    ],
+    "Cache": [
+      {
+        "type": "segment",
+        "name": "Default",
+        "properties": {
+          "segment_name": "Default"
+        },
+        "dependsOn": []
+      }
+    ]
+  }
+}

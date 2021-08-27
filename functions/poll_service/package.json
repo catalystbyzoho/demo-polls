@@ -1,0 +1,12 @@
+{
+	"name": "poll_service",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "akilavan.j+localzoho@zohotest.com",
+	"dependencies": {
+		"express": "^4.17.1",
+		"lodash": "^4.17.21",
+		"moment": "^2.29.1",
+		"zcatalyst-sdk-node": "latest"
+	}
+}

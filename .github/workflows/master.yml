@@ -1,0 +1,36 @@
+name: ReleasePollApp
+on:
+  push:
+    tags:
+      - 'v*' # P
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '12.x'
+    - run: cd functions/poll_service/ && npm install --save
+    - run: cd functions/data_populate/ && npm install --save
+    - name : Create Resource Directory
+      run : mkdir -p Functions && mkdir -p WebClient
+    - name : Package Function Resource
+      run : cd functions/poll_service && zip -r ../../Functions/poll_service.zip . 
+    - name : Package Java Function Resource 
+      run : cd functions/poll_service_java/.output && zip -r ../../../Functions/poll_service_java.zip . 
+    - name : Package Data Populate Function Resource
+      run : cd functions/data_populate && zip -r ../../Functions/data_populate.zip .
+    - name : Package Client Resource
+      run : cd client && zip -r ../WebClient/PollApp.zip .
+    - name: Zip Folder
+      run: zip -r release.zip Functions/ WebClient/ project-template-1.0.0.json -x ".git/*" ".github/*"
+
+    # - uses: actions/checkout@v2
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "./release.zip"
+        bodyFile: "README.md"
+        token: ${{ secrets.GITHUB_TOKEN }}
