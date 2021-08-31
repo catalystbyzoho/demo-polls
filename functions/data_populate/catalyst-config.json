@@ -1,7 +1,7 @@
 {
 	"deployment": {
 		"name": "data_populate",
-		"stack": "node10",
+		"stack": "node14",
 		"type": "basicio"
 	},
 	"execution": {

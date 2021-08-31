@@ -9,7 +9,7 @@
         "type": "function",
         "name": "poll_service",
         "properties": {
-          "stack": "node10",
+          "stack": "node14",
           "code": {
             "path": "Functions/poll_service.zip"
           },
@@ -35,7 +35,7 @@
         "type": "function",
         "name": "data_populate",
         "properties": {
-          "stack": "node10",
+          "stack": "node14",
           "code": {
             "path": "Functions/data_populate.zip"
           },

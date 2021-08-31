@@ -1,7 +1,7 @@
 {
 	"deployment": {
 		"name": "poll_service",
-		"stack": "node10",
+		"stack": "node14",
 		"type": "advancedio"
 	},
 	"execution": {
