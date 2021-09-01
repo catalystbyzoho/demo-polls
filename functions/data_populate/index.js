@@ -812,11 +812,13 @@ module.exports = async (context, basicIO) => {
         }
         const end_time = new Date()
         const time_diff = Math.abs(end_time.getTime() - start_time.getTime())
+        basicIO.setStatus(200);
         basicIO.write("Total time : " + Math.ceil(time_diff / 1000))
         context.close()
 
     } catch (err) {
         console.log(err)
+        basicIO.setStatus(500);
         basicIO.write("err")
         context.close()
 
