@@ -88,7 +88,7 @@ function updateEndTime(element) {
 
 // Delete Poll
 function deletePoll(element) {
-  let index = parseInt($(element).attr("index"));
+  let index = $(element).attr("index");
   $("#deleteCancel").attr("disabled", true);
   $("#deleteButton").attr("disabled", true);
   $("#deleteLoader").css("display", "block");
@@ -138,7 +138,7 @@ function deletePoll(element) {
 
 // Open Edit Dialog
 function openEditDialog(element) {
-  let index = parseInt(element.getAttribute("index"));
+  let index = element.getAttribute("index");
   let duration = $(`#time_${index}`).attr("duration");
   $("#updatePollTitle").text($(`#header${index}`).text());
   $("#updateButton").attr("index", index);
@@ -591,7 +591,7 @@ function realTimeTimer() {
   let timeDivs = document.getElementsByName("time");
   let i, poll_id, date, temp, endedContainer, endedContent, homeButton, resultButton, footer;
   for (i = 0; i < timeDivs.length; i++) {
-    poll_id = parseInt(timeDivs[i].getAttribute("index"));
+    poll_id = timeDivs[i].getAttribute("index");
     date = timeDivs[i].getAttribute("duration");
     temp = calculateDifferenceBetweenDates(date);
     if (!temp.days && !temp.hours && !temp.minutes && !temp.seconds) {

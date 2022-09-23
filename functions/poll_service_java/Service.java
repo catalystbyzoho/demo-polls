@@ -113,6 +113,8 @@ public class Service implements CatalystAdvancedIOHandler {
 				String first_name = requestParameters.get("first_name").toString();
 				String last_name = requestParameters.get("last_name").toString();
 				String email_id = requestParameters.get("email_id").toString();
+
+			
 				responseData = registerUser(email_id, first_name, last_name,
 						Long.parseLong(request.getHeader("x-zc-project-key")));
 
@@ -178,6 +180,10 @@ public class Service implements CatalystAdvancedIOHandler {
 			} else if (url.equals("/FOLDER_ID") && method.equals(GET)) {
 				responseData = new JSONObject();
 				responseData.put("FOLDER_ID", getFolderId());
+			}else{
+				responseData = new JSONObject();
+				responseData.put("status", "failure");
+				responseData.put("message", "We're unable to process the request.");
 			}
 			response.setStatus(200);
 		} catch (UserAlreadyExists e) {
@@ -560,8 +566,9 @@ public class Service implements CatalystAdvancedIOHandler {
 		}
 		ZCSignUpData signUpdetails = ZCSignUpData.getInstance();
 		signUpdetails.setPlatformType(PlatformType.WEB);
+		signUpdetails.setOrgId(ZAID);
+
 		signUpdetails.userDetail.setFirstName(first_name);
-		signUpdetails.userDetail.setZaaid(ZAID);
 		signUpdetails.userDetail.setEmailId(email_id);
 		signUpdetails.userDetail.setLastName(last_name);
 		signUpdetails = ZCUser.getInstance().registerUser(signUpdetails);
@@ -720,7 +727,7 @@ public class Service implements CatalystAdvancedIOHandler {
 		}
 		pollOptionsList = (ArrayList<ZCRowObject>) pollOptionsTable.insertRows(pollOptionsList);
 
-		pollData.put("id", zcRowObject.get("ROWID"));
+		pollData.put("id", zcRowObject.get("ROWID").toString());
 		pollData.put("content", zcRowObject.get("content"));
 		pollData.put("duration", zcRowObject.get("duration"));
 		pollData.put("file_id", zcRowObject.get("file_id"));
@@ -729,7 +736,7 @@ public class Service implements CatalystAdvancedIOHandler {
 
 		for (ZCRowObject rowData : pollOptionsList) {
 			options = new HashMap<String, Object>();
-			options.put("id", rowData.get("ROWID"));
+			options.put("id", rowData.get("ROWID").toString());
 			options.put("content", rowData.get("content"));
 			options.put("file_id", rowData.get("file_id"));
 			optionsList.add(options);
@@ -797,6 +804,10 @@ public class Service implements CatalystAdvancedIOHandler {
 		Integer tempVotes;
 
 		pollData = pollTable.getRow(poll_id);
+
+		System.out.println(pollData.getRowObject());
+		
+
 		pollOptionData = pollOptionTable.getRow(poll_option_id);
 
 		tempVotes = Integer.parseInt(pollData.get("votes").toString()) + 1;
