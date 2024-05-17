@@ -1064,7 +1064,7 @@ async function getMaximumPolled(catalyst, poll_id) {
 
 	await ZCQL(catalyst, maxQuery)
 		.then((response) => {
-			maxVotes = parseInt(response[0].PollOptions.votes);
+			maxVotes = parseInt(response[0].PollOptions['MAX(votes)']);
 		})
 		.catch((err) => {
 			errorFlag = true;
