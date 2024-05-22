@@ -47,7 +47,8 @@ app.post('/AllPolls', async (req, res) => {
 
 	await ZCQL(catalyst, query)
 		.then((response) => {
-			pollCount = parseInt(response[0].Polls.ROWID);
+			pollCount = parseInt(response[0].Polls['COUNT(ROWID)']);
+			console.log(pollCount)
 		})
 		.catch((err) => {
 			console.log(err);
@@ -60,9 +61,8 @@ app.post('/AllPolls', async (req, res) => {
 	}
 	const range = (page - 1) * 6 + 1;
 
-	query = `select Polls.content,Polls.duration,Polls.category,Polls.ROWID,Polls.votes from Polls limit ${
-		range > 0 ? range : 1
-	},6`;
+	query = `select Polls.content,Polls.duration,Polls.category,Polls.ROWID,Polls.votes from Polls limit ${range > 0 ? range : 1
+		},6`;
 
 	data = await ZCQL(catalyst, query).catch((err) => {
 		console.log(err);
@@ -175,7 +175,7 @@ app.post(['/MyVotes', '/AllPolls/Completed'], async (req, res) => {
 
 	await ZCQL(catalyst, query)
 		.then((response) => {
-			userPollCount = parseInt(response[0].User_Polls.ROWID);
+			userPollCount = parseInt(response[0].User_Polls['COUNT(ROWID)']);
 		})
 		.catch((err) => {
 			console.log(err);
@@ -188,9 +188,8 @@ app.post(['/MyVotes', '/AllPolls/Completed'], async (req, res) => {
 	}
 	const range = (page - 1) * 6 + 1;
 
-	query = `select Polls.content,Polls.category,Polls.ROWID,Polls.duration,Polls.votes,PollOptions.content,PollOptions.votes,User_Polls.voted_time from Polls inner join User_Polls on Polls.ROWID = User_Polls.poll_id inner join PollOptions on User_Polls.poll_option_id = PollOptions.ROWID where User_Polls.CREATORID =${user_id} limit ${
-		range > 0 ? range : 1
-	},6`;
+	query = `select Polls.content,Polls.category,Polls.ROWID,Polls.duration,Polls.votes,PollOptions.content,PollOptions.votes,User_Polls.voted_time from Polls inner join User_Polls on Polls.ROWID = User_Polls.poll_id inner join PollOptions on User_Polls.poll_option_id = PollOptions.ROWID where User_Polls.CREATORID =${user_id} limit ${range > 0 ? range : 1
+		},6`;
 
 	await ZCQL(catalyst, query)
 		.then((response) => {
@@ -248,7 +247,7 @@ app.post('/MyPolls', async (req, res) => {
 
 	await ZCQL(catalyst, query)
 		.then((response) => {
-			pollCount = parseInt(response[0].Polls.ROWID);
+			pollCount = parseInt(response[0].Polls['COUNT(ROWID)']);
 		})
 		.catch((err) => {
 			console.log(err);
@@ -262,9 +261,8 @@ app.post('/MyPolls', async (req, res) => {
 
 	const range = (page - 1) * 6 + 1;
 
-	query = `select Polls.content,Polls.duration,Polls.category,Polls.ROWID,Polls.votes from Polls where Polls.CREATORID =${user_id} limit ${
-		range > 0 ? range : 1
-	},6`;
+	query = `select Polls.content,Polls.duration,Polls.category,Polls.ROWID,Polls.votes from Polls where Polls.CREATORID =${user_id} limit ${range > 0 ? range : 1
+		},6`;
 
 	data = await ZCQL(catalyst, query).catch((err) => {
 		console.log(err);
@@ -365,7 +363,7 @@ app.post('/MyPolls/Ended', async (req, res) => {
 
 	await ZCQL(catalyst, query)
 		.then((response) => {
-			pollCount = parseInt(response[0].Polls.ROWID);
+			pollCount = parseInt(response[0].Polls['COUNT(ROWID)']);
 		})
 		.catch((err) => {
 			console.log(err);
@@ -912,7 +910,7 @@ app.get('/AllPolls/:page', async (req, res) => {
 
 	await ZCQL(catalyst, query)
 		.then((response) => {
-			pollCount = parseInt(response[0].Polls.ROWID);
+			pollCount = parseInt(response[0].Polls['COUNT(ROWID)']);
 		})
 		.catch((err) => {
 			console.log(err);
@@ -926,9 +924,8 @@ app.get('/AllPolls/:page', async (req, res) => {
 
 	const range = (page - 1) * 6 + 1;
 
-	query = `select Polls.content,Polls.duration,Polls.category,Polls.ROWID,Polls.votes from Polls limit ${
-		range > 0 ? range : 0
-	},6`;
+	query = `select Polls.content,Polls.duration,Polls.category,Polls.ROWID,Polls.votes from Polls limit ${range > 0 ? range : 0
+		},6`;
 
 	const currentTime = new Date();
 	const currentOffset = currentTime.getTimezoneOffset();
@@ -1024,7 +1021,7 @@ app.post('/register', async (req, res) => {
 	const userManagement = catalyst.userManagement();
 	const data = req.body;
 	const zaid = req.headers['x-zc-project-key'];
-	
+
 	const signupConfig = {
 		platform_type: 'web',
 		zaid

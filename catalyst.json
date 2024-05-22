@@ -2,7 +2,8 @@
   "functions": {
     "targets": [
       "poll_service",
-      "data_populate"
+      "data_populate",
+      "poll_service_java"
     ],
     "ignore": [],
     "source": "functions"

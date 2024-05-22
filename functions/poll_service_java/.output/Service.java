@@ -223,7 +223,7 @@ public class Service implements CatalystAdvancedIOHandler {
 		query = "select count(Polls.ROWID) from Polls;";
 		rowList = ZCQL.getInstance().executeQuery(query);
 		zcRowObject = rowList.get(0);
-		pollCount = Integer.parseInt(zcRowObject.get("ROWID").toString());
+		pollCount = Integer.parseInt(zcRowObject.get("COUNT(ROWID)").toString());
 		totalPage = (int) Math.ceil((float) pollCount / 6);
 
 		if (totalPage < page) {
@@ -293,7 +293,7 @@ public class Service implements CatalystAdvancedIOHandler {
 				user_id);
 		rowList = ZCQL.getInstance().executeQuery(query);
 		zcRowObject = rowList.get(0);
-		userPollCount = Integer.parseInt(zcRowObject.get("ROWID").toString());
+		userPollCount = Integer.parseInt(zcRowObject.get("COUNT(ROWID)").toString());
 		totalPage = (int) Math.ceil((float) userPollCount / 6);
 
 		if (totalPage < page) {
@@ -344,7 +344,7 @@ public class Service implements CatalystAdvancedIOHandler {
 		query = String.format("select count(Polls.ROWID) from Polls where Polls.CREATORID='%s'", user_id);
 		rowList = ZCQL.getInstance().executeQuery(query);
 		zcRowObject = rowList.get(0);
-		pollCount = Integer.parseInt(zcRowObject.get("ROWID").toString());
+		pollCount = Integer.parseInt(zcRowObject.get("COUNT(ROWID)").toString());
 		totalPage = (int) Math.ceil((float) pollCount / 6);
 
 		if (totalPage < page) {
@@ -416,7 +416,7 @@ public class Service implements CatalystAdvancedIOHandler {
 				currentTime);
 		rowList = ZCQL.getInstance().executeQuery(query);
 		zcRowObject = rowList.get(0);
-		pollCount = Integer.parseInt(zcRowObject.get("ROWID").toString());
+		pollCount = Integer.parseInt(zcRowObject.get("COUNT(ROWID)").toString());
 		totalPage = (int) Math.ceil((float) pollCount / 6);
 
 		if (totalPage < page) {
@@ -519,7 +519,7 @@ public class Service implements CatalystAdvancedIOHandler {
 		query = "select count(Polls.ROWID) from Polls;";
 		rowList = ZCQL.getInstance().executeQuery(query);
 		zcRowObject = rowList.get(0);
-		pollCount = Integer.parseInt(zcRowObject.get("ROWID").toString());
+		pollCount = Integer.parseInt(zcRowObject.get("COUNT(ROWID)").toString());
 		totalPage = (int) Math.ceil((float) pollCount / 6);
 
 		if (totalPage < page) {
