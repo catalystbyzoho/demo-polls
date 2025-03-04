@@ -14,7 +14,10 @@
 						"path": "Functions/poll_service.zip"
 					},
 					"type": "applogic",
-					"name": "poll_service"
+					"name": "poll_service",
+					"configuration" : {
+						"memory" : 256
+					}
 				},
 				"dependsOn": []
 			},
@@ -27,7 +30,10 @@
 						"path": "Functions/poll_service_java.zip"
 					},
 					"type": "applogic",
-					"name": "poll_service_java"
+					"name": "poll_service_java",
+					"configuration" : {
+						"memory" : 256
+					}
 				},
 				"dependsOn": []
 			},
@@ -40,7 +46,10 @@
 						"path": "Functions/data_populate.zip"
 					},
 					"type": "basicio",
-					"name": "data_populate"
+					"name": "data_populate",
+					"configuration" : {
+						"memory" : 256
+					}
 				},
 				"dependsOn": []
 			}
