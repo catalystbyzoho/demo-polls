@@ -16,7 +16,8 @@
 					"type": "applogic",
 					"name": "poll_service"
 				},
-				"dependsOn": []
+				"dependsOn": [],
+				"memory" : 256
 			},
 			{
 				"type": "function",
@@ -29,7 +30,8 @@
 					"type": "applogic",
 					"name": "poll_service_java"
 				},
-				"dependsOn": []
+				"dependsOn": [],
+				"memory" : 256
 			},
 			{
 				"type": "function",
@@ -42,7 +44,8 @@
 					"type": "basicio",
 					"name": "data_populate"
 				},
-				"dependsOn": []
+				"dependsOn": [],
+				"memory" : 256
 			}
 		],
 		"Add-onServices": [],
