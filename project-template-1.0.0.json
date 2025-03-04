@@ -17,7 +17,9 @@
 					"name": "poll_service"
 				},
 				"dependsOn": [],
-				"memory" : 256
+				"configuration" : {
+					"memory" : 256
+				}
 			},
 			{
 				"type": "function",
@@ -31,7 +33,9 @@
 					"name": "poll_service_java"
 				},
 				"dependsOn": [],
-				"memory" : 256
+				"configuration" : {
+					"memory" : 256
+				}
 			},
 			{
 				"type": "function",
@@ -45,7 +49,9 @@
 					"name": "data_populate"
 				},
 				"dependsOn": [],
-				"memory" : 256
+				"configuration" : {
+					"memory" : 256
+				}
 			}
 		],
 		"Add-onServices": [],
