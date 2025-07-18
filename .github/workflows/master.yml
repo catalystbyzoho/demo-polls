@@ -2,7 +2,10 @@ name: ReleasePollApp
 on:
   push:
     tags:
-      - 'v*' # P
+      - 'v*' 
+
+permissions:
+  contents: write
 
 jobs:
   build:
