@@ -69,7 +69,7 @@ public class Service implements CatalystAdvancedIOHandler {
 				responseData = getMyVotesOrCompletedPolls(user_id, page);
 				responseData.remove("pollMap");
 
-			} else if (url.equals("/MyPolls") && method.equals(POST)) {
+			} else if (url.equals("/MyPoll") && method.equals(POST)) {
 
 				ServletInputStream requestBody = request.getInputStream();
 				JSONParser jsonParser = new JSONParser();
