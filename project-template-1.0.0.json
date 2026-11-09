@@ -54,7 +54,117 @@
 				"dependsOn": []
 			}
 		],
-		"Add-onServices": [],
+		"Add-onServices": [
+			{
+				"type": "apigateway",
+				"name": "data_populate",
+				"properties": {
+					"throttling": {
+						"ip": {
+							"duration": {
+								"hours": 0,
+								"seconds": 0,
+								"minutes": 1,
+								"days": 0
+							},
+							"limit": 15
+						},
+						"overall": {}
+					},
+					"method": "ANY",
+					"target_endpoint": "/server/data_populate/execute",
+					"source_endpoint": "/server/data_populate/execute",
+					"name": "data_populate",
+					"target_id": "data_populate",
+					"target": "basicio"
+				},
+				"dependsOn": []
+			},
+			{
+				"type": "apigateway",
+				"name": "poll_service_java",
+				"properties": {
+					"throttling": {
+						"ip": {
+							"duration": {
+								"hours": 0,
+								"seconds": 0,
+								"minutes": 1,
+								"days": 0
+							},
+							"limit": 15
+						},
+						"overall": {}
+					},
+					"method": "ANY",
+					"target_endpoint": "/server/poll_service_java/{path1}",
+					"source_endpoint": "/server/poll_service_java/{path1:(.*)}",
+					"name": "poll_service_java",
+					"target_id": "poll_service_java",
+					"target": "advancedio"
+				},
+				"dependsOn": []
+			},
+			{
+				"type": "apigateway",
+				"name": "poll_service",
+				"properties": {
+					"throttling": {
+						"ip": {
+							"duration": {
+								"hours": 0,
+								"seconds": 0,
+								"minutes": 1,
+								"days": 0
+							},
+							"limit": 15
+						},
+						"overall": {}
+					},
+					"method": "ANY",
+					"target_endpoint": "/server/poll_service/{path1}",
+					"source_endpoint": "/server/poll_service/{path1:(.*)}",
+					"name": "poll_service",
+					"target_id": "poll_service",
+					"target": "advancedio"
+				},
+				"dependsOn": []
+			},
+			{
+				"type": "apigateway",
+				"name": "pollsApp - Web Client Hosting",
+				"properties": {
+					"throttling": {
+						"ip": {},
+						"overall": {}
+					},
+					"method": "GET",
+					"target_endpoint": "/app/{path1}",
+					"source_endpoint": "/app/{path1:(.*)}",
+					"name": "pollsApp - Web Client Hosting",
+					"target_id": "pollsApp",
+					"target": "client"
+				},
+				"dependsOn": []
+			},
+			{
+				"type": "apigateway",
+				"name": "Login Redirect",
+				"properties": {
+					"throttling": {
+						"ip": {},
+						"overall": {}
+					},
+					"method": "GET",
+					"target_endpoint": "/app/home.html",
+					"source_endpoint": "/app/home.html",
+					"name": "Login Redirect",
+					"target_id": "pollsApp",
+					"target": "client"
+				},
+				"dependsOn": []
+			}
+		],
 		"WebClient": [
 			{
 				"type": "client",
@@ -68,7 +178,6 @@
 				"dependsOn": []
 			}
 		],
-		"Cron": [],
 		"Filestore": [
 			{
 				"type": "folder",
@@ -101,8 +210,6 @@
 				"dependsOn": ["Filestore.folder.Images"]
 			}
 		],
-		"Mail": [],
-		"Zia": [],
 		"Datastore": [
 			{
 				"type": "table",
@@ -444,6 +551,21 @@
 					"table_id": "User_Polls",
 					"table_name": "User_Polls",
 					"max_length": 50
+				},
+				"dependsOn": ["Datastore.table.User_Polls"]
+			},
+			{
+				"type": "column",
+				"name": "User_Polls-voter_token",
+				"properties": {
+					"column_name": "voter_token",
+					"data_type": "varchar",
+					"is_unique": true,
+					"is_mandatory": false,
+					"search_index_enabled": false,
+					"table_id": "User_Polls",
+					"table_name": "User_Polls",
+					"max_length": 255
 				},
 				"dependsOn": ["Datastore.table.User_Polls"]
 			},

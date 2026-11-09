@@ -10,10 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -169,7 +171,17 @@ public class Service implements CatalystAdvancedIOHandler {
 				String poll_id = requestParameters.get("poll_id").toString();
 				Long poll_option_id = Long.parseLong(requestParameters.get("poll_option_id").toString());
 				String user_id = requestParameters.getOrDefault("user_id", "").toString();
-				saveVote(Long.parseLong(poll_id), poll_option_id);
+
+				String voterToken = readVoterToken(request);
+				boolean issueCookie = false;
+				if (voterToken == null) {
+					voterToken = UUID.randomUUID().toString();
+					issueCookie = true;
+				}
+				saveVote(Long.parseLong(poll_id), poll_option_id, voterToken);
+				if (issueCookie) {
+					response.addCookie(buildVoterCookie(voterToken));
+				}
 
 				if (user_id.isEmpty()) {
 					responseData = new JSONObject();
@@ -188,6 +200,12 @@ public class Service implements CatalystAdvancedIOHandler {
 			response.setStatus(200);
 		} catch (UserAlreadyExists e) {
 			LOGGER.log(Level.SEVERE, "Exception in Service", e);
+			response.setStatus(400);
+			responseData = new JSONObject();
+			responseData.put("status", false);
+			responseData.put("message", e.getMessage());
+		} catch (AlreadyVotedException e) {
+			LOGGER.log(Level.INFO, "Duplicate vote blocked", e);
 			response.setStatus(400);
 			responseData = new JSONObject();
 			responseData.put("status", false);
@@ -790,11 +808,8 @@ public class Service implements CatalystAdvancedIOHandler {
 		return new JSONObject(result);
 	}
 
-	private static void saveVote(Long poll_id, Long poll_option_id) throws Exception {
-		ZCRowObject pollData = ZCRowObject.getInstance();
-		ZCRowObject pollOptionData = ZCRowObject.getInstance();
-		ZCRowObject updateData = ZCRowObject.getInstance();
-		ZCRowObject insertData = ZCRowObject.getInstance();
+	private static void saveVote(Long poll_id, Long poll_option_id, String voterToken)
+			throws AlreadyVotedException, Exception {
 		ZCObject obj = ZCObject.getInstance();
 		ArrayList<ZCRowObject> rows = new ArrayList<ZCRowObject>();
 
@@ -803,13 +818,22 @@ public class Service implements CatalystAdvancedIOHandler {
 		ZCTable userPollTable = obj.getTable("User_Polls");
 		Integer tempVotes;
 
-		pollData = pollTable.getRow(poll_id);
+		ZCRowObject pollData = pollTable.getRow(poll_id);
+		ZCRowObject pollOptionData = pollOptionTable.getRow(poll_option_id);
 
-		System.out.println(pollData.getRowObject());
-		
+		ZCRowObject insertData = ZCRowObject.getInstance();
+		insertData.set("poll_id", poll_id.toString());
+		insertData.set("poll_option_id", poll_option_id.toString());
+		insertData.set("voted_time", getCurrentISTTime());
+		insertData.set("voter_token", poll_id.toString() + "_" + voterToken);
+		try {
+			userPollTable.insertRow(insertData);
+		} catch (Exception e) {
+			LOGGER.log(Level.INFO, "Duplicate vote blocked", e);
+			throw new AlreadyVotedException("Already Voted");
+		}
 
-		pollOptionData = pollOptionTable.getRow(poll_option_id);
-
+		ZCRowObject updateData = ZCRowObject.getInstance();
 		tempVotes = Integer.parseInt(pollData.get("votes").toString()) + 1;
 		updateData.set("votes", tempVotes);
 		updateData.set("ROWID", pollData.get("ROWID").toString());
@@ -824,12 +848,28 @@ public class Service implements CatalystAdvancedIOHandler {
 		rows.add(updateData);
 		pollOptionTable.updateRows(rows);
 		rows.clear();
+	}
 
-		insertData.set("poll_id", poll_id.toString());
-		insertData.set("poll_option_id", poll_option_id.toString());
-		insertData.set("voted_time", getCurrentISTTime());
+	private static String readVoterToken(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null) {
+			return null;
+		}
+		for (Cookie cookie : cookies) {
+			if ("voter_token".equals(cookie.getName())) {
+				return cookie.getValue();
+			}
+		}
+		return null;
+	}
 
-		userPollTable.insertRow(insertData);
+	private static Cookie buildVoterCookie(String voterToken) {
+		Cookie cookie = new Cookie("voter_token", voterToken);
+		cookie.setHttpOnly(true);
+		cookie.setSecure(true);
+		cookie.setPath("/");
+		cookie.setMaxAge(365 * 24 * 60 * 60);
+		return cookie;
 	}
 
 	private static String getFolderId() throws Exception {

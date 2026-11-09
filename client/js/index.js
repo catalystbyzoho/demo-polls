@@ -442,7 +442,13 @@ async function saveVote(element) {
 			})
 			.catch((err) => {
 				console.log(err);
-				alert('Internal Server Error Alert Occured');
+				const body = err.responseJSON || {};
+				const message =
+					body.message || (body.data && body.data.message) ||
+					'Internal Server Error Alert Occured';
+				element.disabled = false;
+				$('#loader_vote').css('display', 'none');
+				alert(message);
 			});
 	}
 }
