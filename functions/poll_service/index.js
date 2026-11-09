@@ -15,6 +15,12 @@ const {
 } = require('./catalystfunctions');
 const moment = require('moment');
 const catalystSDK = require('zcatalyst-sdk-node');
+const {
+	VOTER_COOKIE,
+	cookieOptions,
+	readVoterToken,
+	newVoterToken
+} = require('./voter-identity');
 
 const app = express();
 app.use(express.json());
@@ -738,160 +744,90 @@ app.post('/getPoll', async (req, res) => {
 		});
 });
 
-app.post('/saveVote', async (req, res) => {
-	const catalyst = res.locals.catalyst;
-	const poll_id = req.body.poll_id;
-	const poll_option_id = req.body.poll_option_id;
-	const user_id = req.body.user_id;
-	let query;
-	let poll;
-	let pollOptions;
-	let result = {};
-	let Promises = [];
-	let votes;
-	let particularPollVote;
+app.post('/saveVote', async (req, res, next) => {
+	try {
+		const catalyst = res.locals.catalyst;
+		const poll_id = req.body.poll_id;
+		const poll_option_id = req.body.poll_option_id;
+		const user_id = req.body.user_id;
 
-	query = `SELECT Polls.ROWID from Polls where Polls.ROWID = ${poll_id}`;
-	ZCQL(catalyst, query)
-		.then((response) => {
-			if (!response.length) {
-				res.status(500).send({
-					status: false,
-					message: 'No data Found'
-				});
+		let voterToken = readVoterToken(req);
+		let issueCookie = false;
+		if (!voterToken) {
+			voterToken = newVoterToken();
+			issueCookie = true;
+		}
+
+		const currentTime = new Date();
+		const currentOffset = currentTime.getTimezoneOffset();
+		const ISTTime = new Date(
+			currentTime.getTime() + (ISTOffset + currentOffset) * 60000
+		);
+
+		const userPollInserData = {
+			poll_id,
+			poll_option_id,
+			voted_time: moment(ISTTime).format('YYYY-MM-DD HH:mm:ss'),
+			voter_token: `${poll_id}_${voterToken}`
+		};
+
+		const [pollRow, pollOptionRow] = await Promise.all([
+			getRow(catalyst, 'Polls', poll_id),
+			getRow(catalyst, 'PollOptions', poll_option_id)
+		]);
+
+		try {
+			await insertRow(catalyst, 'User_Polls', userPollInserData);
+		} catch (err) {
+			console.log(err);
+			return res.status(400).send({ status: false, message: 'Already Voted' });
+		}
+
+		await Promise.all([
+			updateRow(catalyst, 'Polls', {
+				ROWID: poll_id,
+				votes: parseInt(pollRow.votes) + 1
+			}),
+			updateRow(catalyst, 'PollOptions', {
+				ROWID: poll_option_id,
+				votes: parseInt(pollOptionRow.votes) + 1
+			})
+		]);
+
+		if (issueCookie) {
+			res.cookie(VOTER_COOKIE, voterToken, cookieOptions);
+		}
+
+		if (!user_id) {
+			return res.status(200).send({ status: true });
+		}
+
+		let result = {};
+		let query = `select Polls.content,Polls.file_id,Polls.votes,Polls.category,PollOptions.content,PollOptions.file_id,PollOptions.votes from Polls inner join PollOptions on PollOptions.poll_id =  Polls.ROWID where Polls.ROWID = '${poll_id}' ORDER BY PollOptions.votes DESC`;
+		const detailRows = await ZCQL(catalyst, query);
+		detailRows.forEach((element) => {
+			const poll = element.Polls;
+			const pollOptions = element.PollOptions;
+			if (has(result, 'content')) {
+				result.options.push(pollOptions);
+			} else {
+				result = {
+					...poll,
+					options: [{ ...pollOptions }]
+				};
 			}
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
 		});
-	const currentTime = new Date();
-	const currentOffset = currentTime.getTimezoneOffset();
-	const ISTTime = new Date(
-		currentTime.getTime() + (ISTOffset + currentOffset) * 60000
-	);
-
-	const userPollInserData = {
-		poll_id,
-		poll_option_id,
-		voted_time: moment(ISTTime).format('YYYY-MM-DD HH:mm:ss')
-	};
-
-	Promises.push(
-		getRow(catalyst, 'Polls', poll_id)
-			.then((response) => {
-				console.log(response);
-				votes = parseInt(response.votes);
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send(err);
-			})
-	);
-
-	Promises.push(
-		getRow(catalyst, 'PollOptions', poll_option_id)
-			.then((response) => {
-				particularPollVote = parseInt(response.votes);
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send(err);
-			})
-	);
-
-	await Promise.all(Promises);
-	particularPollVote += 1;
-	votes += 1;
-
-	const updatePollData = {
-		ROWID: poll_id,
-		votes
-	};
-
-	const updatePollOptionData = {
-		ROWID: poll_option_id,
-		votes: particularPollVote
-	};
-
-	Promises = [];
-	Promises.push(
-		insertRow(catalyst, 'User_Polls', userPollInserData).catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		})
-	);
-
-	Promises.push(
-		updateRow(catalyst, 'Polls', updatePollData).catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		})
-	);
-
-	Promises.push(
-		updateRow(catalyst, 'PollOptions', updatePollOptionData).catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		})
-	);
-
-	await Promise.all(Promises);
-
-	if (user_id) {
-		query = `select Polls.content,Polls.file_id,Polls.votes,Polls.category,PollOptions.content,PollOptions.file_id,PollOptions.votes from Polls inner join PollOptions on PollOptions.poll_id =  Polls.ROWID where Polls.ROWID = '${poll_id}' ORDER BY PollOptions.votes DESC`;
-
-		await ZCQL(catalyst, query)
-			.then((response) => {
-				if (response.length) {
-					response.forEach((element) => {
-						poll = element.Polls;
-						pollOptions = element.PollOptions;
-						if (has(result, 'content')) {
-							result.options.push(pollOptions);
-						} else {
-							result = {
-								...poll,
-								options: [{ ...pollOptions }]
-							};
-						}
-					});
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send(err);
-			});
 
 		query = `select PollOptions.content from PollOptions inner join User_Polls on User_Polls.poll_option_id = PollOptions.ROWID where User_Polls.CREATORID = '${user_id}' and User_Polls.poll_id = '${poll_id}'`;
+		const votedRows = await ZCQL(catalyst, query);
+		result = {
+			...result,
+			userVotedPoll: votedRows.length ? votedRows[0].PollOptions.content : 'NIL'
+		};
 
-		await ZCQL(catalyst, query)
-			.then((response) => {
-				if (response.length) {
-					result = {
-						...result,
-						userVotedPoll: response[0].PollOptions.content
-					};
-				} else {
-					result = {
-						...result,
-						userVotedPoll: 'NIL'
-					};
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send(err);
-			});
-
-		res.status(200).send({
-			status: true,
-			data: result
-		});
-	} else {
-		res.status(200).send({
-			status: true
-		});
+		return res.status(200).send({ status: true, data: result });
+	} catch (err) {
+		return next(err);
 	}
 });
 
@@ -1052,7 +988,21 @@ app.post('/register', async (req, res) => {
 	}
 });
 
+app.use((err, req, res, next) => {
+	console.log(err);
+	if (res.headersSent) {
+		return next(err);
+	}
+	res.status(500).send({ status: false, message: 'Internal Server Error' });
+});
+
 module.exports = app;
+
+async function pollExists(catalyst, poll_id) {
+	const query = `SELECT Polls.ROWID from Polls where Polls.ROWID = ${poll_id}`;
+	const response = await ZCQL(catalyst, query);
+	return response.length > 0;
+}
 
 async function getMaximumPolled(catalyst, poll_id) {
 	const maxQuery = `select max(PollOptions.votes) from PollOptions where PollOptions.poll_id =${poll_id};`;
